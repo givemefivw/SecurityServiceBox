@@ -62,10 +62,10 @@ PoC扫描：
 
 中间件检测利用：
 
-- Shiro
+- Shiro: https://github.com/j1anFen/shiro_attack
 - Struts2
 - ThinkPHP
-- Weblogic
+- Weblogic:https://github.com/21superman/weblogic_exploit
 - 通达OA
 
 socks5代理：

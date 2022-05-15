@@ -1,0 +1,13 @@
+Brotli==1.0.9
+certifi==2021.10.8
+cmd2==2.1.2
+cryptography==3.4.7
+MarkupSafe==2.0.1
+ordereddict==1.1
+pyOpenSSL==21.0.0
+railroad==0.5.0
+rich==11.0.0
+setuptools==57.0.0
+simplejson==3.17.2
+typing_extensions==3.10.0.0
+win_inet_pton==1.1.0
