@@ -133,7 +133,7 @@ class PocScan():
     @staticmethod
     def nuclei_proxy(proxy):
         system(config.config.pocscan_nuclei + " -ut && " + config.config.pocscan_nuclei + " -update")
-        system(r"start cmd /k " + config.config.pocscan_nuclei + r" -l D:\\Arsenal\\WanLi\\url.txt "
+        system(r"start cmd /k " + config.config.pocscan_nuclei + r" -l url.txt "
                r" -p {}:1080 -s medium,high,critical -rate-limit 100 -bulk-size 25 "
                 "-concurrency 25 -stats -si 300 -retries 3".format(proxy))
 
