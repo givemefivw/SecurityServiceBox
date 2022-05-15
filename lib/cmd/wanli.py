@@ -162,7 +162,7 @@ class Proxy():
 
     def rotateproxy(region):
         system(
-            r"start cmd /k " + config.config.rotateproxy + " -email 987302959@qq.com -token d682d712a748eccef1808b43520a732c  -region " + region)
+            r"start cmd /k " + config.config.rotateproxy + " -email  -token  -region " + region)
 
 
 class Exploit():
