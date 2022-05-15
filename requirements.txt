@@ -11,3 +11,4 @@ setuptools==57.0.0
 simplejson==3.17.2
 typing_extensions==3.10.0.0
 win_inet_pton==1.1.0
+django
