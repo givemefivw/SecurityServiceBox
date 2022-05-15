@@ -147,4 +147,24 @@ pocscan_nuclei_parser = Cmd2ArgumentParser()
                "-concurrency 25 -stats -si 300 -retries 3")
 ```
 
-此时就完成了一个工具执行的添加，在运行`main`函数之后，只需执行`pocscan_nuclei -f url.txt`命令，控制台就会自动的执行完整的较长的命令，不需要每次都进入nuclei的文件夹然后手动输入较长的命令。
+此时就完成了一个工具执行的添加
+
+### Step 5 引用命令
+
+最后一步，在main.py函数里面，添加调用：
+
+```
+    def do_pocscan_nuclei(self, args):
+        '''nuclei进行漏洞扫描'''
+        if args.u:
+            url = args.u
+            lib.cmd.wanli.PocScan.nuclei_single(url)
+        if args.f:
+            file = args.f
+            lib.cmd.wanli.PocScan.nuclei_file(file)
+        if args.p:
+            proxy = args.p
+            lib.cmd.wanli.PocScan.nuclei_proxy(proxy)
+```
+
+至此，新的集合添加完毕，只需运行main.py，在控制台输入`pocscan_nuclei -f url.txt`接着回车，就可以调用nuclei执行完整的命令。
