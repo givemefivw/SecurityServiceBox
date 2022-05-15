@@ -85,6 +85,8 @@ socks5代理：
 
 ## 0x05 安装
 
+#### 拉取项目
+
 依赖于Py3.6以上版本
 
 ```markdown
@@ -96,6 +98,10 @@ pip install -r requirements.txt
 
 python main.py
 ```
+
+#### 下载工具
+
+考虑到安全性，项目里面未存放tools，需自行将工具下载至本地，若是信得过，可直接到releases页面[Releases · givemefivw/SecurityServiceBox (github.com)](https://github.com/givemefivw/SecurityServiceBox/releases)下载打包好的tools压缩包，放入项目根目录下即可
 
 ## 0x06 增删改查
 
