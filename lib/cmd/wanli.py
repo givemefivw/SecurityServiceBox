@@ -18,14 +18,14 @@ class Collect():
     @staticmethod
     def subdomain_single(domain):
         system(
-            config.config.collect_subfinder + r" -d " + domain + " -recursive -o ./results/domainbrute/{}.txt".format(
+            config.config.collect_subfinder + r" -d " + domain + "  -o ./results/domainbrute/{}.txt".format(
                 domain))
         system(config.config.collect_ksubdomain + " -verify -f ./results/domainbrute/{}.txt -silent -o {}.txt".format(
             domain, domain))
         system(config.config.PYTHON + " " + config.config.collect_finger + " -f {}.txt".format(domain) + " -o xlsx")
 
     def subdomain_file(file):
-        system(config.config.collect_subfinder + r" -dL " + file + " -recursive -o ./results/domainbrute/{}.txt".format(
+        system(config.config.collect_subfinder + r" -dL " + file + " -o ./results/domainbrute/{}.txt".format(
             datatime))
         system(config.config.collect_ksubdomain + " -verify -f ./results/domainbrute/{}.txt -silent -o {}.txt".format(
             datatime, datatime))
