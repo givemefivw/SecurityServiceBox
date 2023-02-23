@@ -31,7 +31,7 @@
 
 作为一个安服仔，日常渗透中，不同阶段所使用的工具是不同的，除开自动化一条龙的脚本之外，很多时候是需要反复的进入不同的文件夹运行不同的命令，每次使用工具的时候命令可能也是一样的，那么是否有种方式将常用的工具，常用的命令集成在一起，渗透的时候仅需给定目标，就可以调用工具自动执行命令。之前流行过的`GUI_Tools`是一个，有了图形化页面，点击即可运行，但是一个是在Windows环境下界面实在不敢恭维，一个是无法更好的交互（或者也许我没找到交互的方式）。后来无意间发现了阿浪师傅写的一个自用的命令行调用工具，也就是Wanli的初始版本。最开始也在公众号文章说过，最初的设定是“把常用的工具给做了一个调用整合到一个程序内，功能拓展比较方便，目前是根据自己的一些习惯写的，比如目录扫描、子域名爆破+验证、漏洞扫描”。就相当于一个快捷启动工具，与GUI_Tools不同的是，Wanli可以更好的交互，执行自定义的命令。当然，并无比较的意思，两个师傅的工具都有在用（手动狗头 :）。
 
-Wanli的项目地址：https://github.com/ExpLangcn/WanLi‣
+Wanli的项目地址：https://github.com/ExpLangcn/WanLi
 
 与最初的版本不同，最新的Wanli定位发生了变化，由自用的调度工具变为了偏向红队的收集漏扫一体化工具，效果同样顶呱呱。本篇文章依据Wanli的初始版本。
 
@@ -57,33 +57,32 @@ Wanli的项目地址：https://github.com/ExpLangcn/WanLi‣
 
 域名收集：
 
-- subfinder:[subfinder(github.com)](https://github.com/projectdiscovery/subfinder)
-- ksubdomain:[knownsec/ksubdomain: 无状态子域名爆破工具 (github.com)](https://github.com/knownsec/ksubdomain)
+- subfinder:[subfinder](https://github.com/projectdiscovery/subfinder)
+- ksubdomain:[ksubdomain](https://github.com/knownsec/ksubdomain)
 
 指纹扫描：
 
-- Finger:[EASY233/Finger: 一款红队在大量的资产中存活探测与重点攻击系统指纹探测工具 (github.com)](https://github.com/EASY233/Finger)
+- Finger:[Finger](https://github.com/EASY233/Finger)
 
 ip扫描：
 
-- smap:[s0md3v/Smap: a drop-in replacement for Nmap powered by shodan.io (github.com)](https://github.com/s0md3v/Smap)
-- fscan:[shadow1ng/fscan: 一款内网综合扫描工具，方便一键自动化、全方位漏扫扫描。 (github.com)](https://github.com/shadow1ng/fscan)
+- smap:[Smap](https://github.com/s0md3v/Smap)
+- fscan:[/fscan](https://github.com/shadow1ng/fscan)
 - goon: [(github.com)](https://github.com/i11us0ry/goon)
 
 目录扫描：
 
-- dirsearch:[maurosoria/dirsearch: Web path scanner (github.com)](https://github.com/maurosoria/dirsearch)
-- ffuf:[ffuf/ffuf: Fast web fuzzer written in Go (github.com)](https://github.com/ffuf/ffuf)
+- dirsearch:[dirsearch](https://github.com/maurosoria/dirsearch)
+- ffuf:[ffuf](https://github.com/ffuf/ffuf)
 
 PoC扫描：
 
-- afrog:[zan8in/afrog: 一个挖洞工具 - A tool for finding vulnerabilities (github.com)](https://github.com/zan8in/afrog)
+- afrog:[afrog](https://github.com/zan8in/afrog)
 - autoxray:内置，xray basic爬虫模式自动批量扫描
-- nuclei:[projectdiscovery/nuclei: Fast and customizable vulnerability scanner based on simple YAML based DSL. (github.com)](https://github.com/projectdiscovery/nuclei)
+- nuclei:[nuclei](https://github.com/projectdiscovery/nuclei)
 - pocsearch:内置，搜索CVE编号漏洞的poc/exp在Github的地址
 - rad:[chaitin/rad (github.com)](https://github.com/chaitin/rad)
 - vulmap:[zhzyker/vulmap: Vulmap 是一款 web 漏洞扫描和验证工具, 可对 webapps 进行漏洞扫描, 并且具备漏洞验证功能 (github.com)](https://github.com/zhzyker/vulmap)
-- xrad:内置，xray和rad联动扫描
 
 中间件检测利用：
 
@@ -101,7 +100,6 @@ socks5代理：
 
 - AppInfoScanner：https://github.com/kelvinBen/AppInfoScanner
 - frida-skeleton：https://github.com/Margular/frida-skeleton
-- Packer-Fuzzer：https://github.com/rtcatc/Packer-Fuzzer
 
 ## 0x04 定位
 
@@ -118,20 +116,32 @@ git clone https://github.com/givemefivw/SecurityServiceBox.git
 
 cd SecurityServiceBox
 
+python3 install.py
+
 pip install -r requirements.txt
 
-python main.py
+python3 main.py
 ```
 
 #### 下载工具
 
 考虑到安全性，项目里面未存放tools，需自行将工具下载至本地，若是信得过，可直接下载网盘
 
-链接: 链接: https://pan.baidu.com/s/1JYmHNSGaze6Cpkk3sZ9ZNw 提取码: qbj7 复制这段内容后打开百度网盘手机App，操作更方便哦
+~~链接: 链接: https://pan.baidu.com/s/1JYmHNSGaze6Cpkk3sZ9ZNw 提取码: qbj7 复制这段内容后打开百度网盘手机App，操作更方便哦~~
+
+2023.02.23更新
+
+有些工具版本过时，且从网盘下载不方便，重新写了个下载脚本，初步实现从Github项目里面下载最新release：
+
+![](./pics/download.png)
+
+默认是使用V2rayN的10808socks代理，可自行修改。运行或许会出现`returned non-zero exit status`匹配结果为空，大概率是网络问题，可以重新运行一下。
+
+但CMS利用工具有的是从公众号获取的，暂时无法查到所有项目出处，所以直接放进tools/exploit里面了。
 
 ## 0x06 增删改查
 
-得益于阿浪师傅的框架，仅需四步即可实现工具的增删改查：
+得益于阿浪师傅的框架，仅需5步即可实现工具的增删改查：
 
 ### Step 1 下载所需工具
 

@@ -8,7 +8,6 @@ app_appinfoscanner     = "./tools/app/AppInfoScanner/app.py"
 app_fridaskeleton      = "./tools/app/frida-skeleton/frida-skeleton.py"
 
 collect_smap           = ".\\tools\\collect\\smap\\smap.exe"
-collect_nmapformatter  = ".\\tools\collect\\smap\\nmap-formatter.exe"
 collect_ksubdomain     = ".\\tools\\collect\\ksubdomain\\ksubdomain.exe"
 collect_subfinder      = ".\\tools\\collect\\subfinder\\subfinder.exe"
 collect_finger         = "./tools/collect/Finger/Finger.py"
