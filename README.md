@@ -100,6 +100,7 @@ socks5代理：
 
 - AppInfoScanner：https://github.com/kelvinBen/AppInfoScanner
 - frida-skeleton：https://github.com/Margular/frida-skeleton
+- LinuxCheck：https://github.com/al0ne/LinuxCheck
 
 ## 0x04 定位
 
