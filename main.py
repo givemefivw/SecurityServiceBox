@@ -7,7 +7,7 @@ import cmd2
 import xlrd
 import cmd2 as cmd
 import lib.cmd.wanli
-import config.config
+import configs.config
 import time
 from random import randint
 from rich.table import Table
@@ -56,21 +56,10 @@ def clear():
                                         [green]---Info: Arsenal''')
 
 
-CVE_list = []
-
-
-def search(path, keyword):
-    content = os.listdir(path)
-    for each in content:
-        each_path = path + os.sep + each
-        if keyword in each:
-            CVE_list.append(each_path)
-        if os.path.isdir(each_path):
-            search(each_path, keyword)
 
 
 class newcmd(cmd.Cmd):
-    prompt = config.config.TITLE  # 自定义交互式提示字符串
+    prompt = configs.config.TITLE  # 自定义交互式提示字符串
 
     # 自定义欢迎语
     console.print('''
@@ -83,24 +72,8 @@ class newcmd(cmd.Cmd):
     console.print('''
                                         [green]---Info: Arsenal''')
 
-    # ----------------------------------------分割----------------------------------------
+    # ----------------------------------------信息收集----------------------------------------
     # 定义-h内容
-
-    collect_smap_parser = Cmd2ArgumentParser()
-    collect_smap_parser.add_argument(
-        "-i", nargs='?', help="smap资产端口信息扫描")
-    collect_smap_parser.add_argument(
-        "-f", nargs='?', help="smap文本资产端口信息扫描")
-
-    @cmd2.with_argparser(collect_smap_parser)
-    def do_collect_smap(self, args):
-        '''smap资产端口信息扫描'''
-        if args.i:
-            ip = args.i
-            lib.cmd.wanli.Collect.smap_single(ip)
-        if args.f:
-            file = args.f
-            lib.cmd.wanli.Collect.smap_file(file)
 
     collect_finger_parser = Cmd2ArgumentParser()
     collect_finger_parser.add_argument(
@@ -120,20 +93,71 @@ class newcmd(cmd.Cmd):
 
     collect_subdomain_parser = Cmd2ArgumentParser()
     collect_subdomain_parser.add_argument(
-        "-d", nargs='?', help="subfinder域名爆破,ksubdomain验证模式,finger指纹扫描,输出xlsx, domainbrute -d baidu.com")
+        "-d", nargs='?', help="subfinder域名爆破,ksubdomain验证模式, domainbrute -d baidu.com")
     collect_subdomain_parser.add_argument(
-        "-f", nargs='?', help="subfinder批量域名爆破,ksubdomain验证模式,finger指纹扫描,输出xlsx, domainbrute -f domain.txt")
+        "-f", nargs='?', help="subfinder批量域名爆破,ksubdomain验证模式, domainbrute -f domain.txt")
+    collect_subdomain_parser.add_argument(
+        "-o", nargs='?', help="-f模式指定爆破域名结果输出文本名称")
 
     @cmd2.with_argparser(collect_subdomain_parser)
     def do_collect_subdomain(self, args):
-        '''subfinder域名爆破,ksubdomain验证模式,finger指纹扫描,输出xlsx'''
+        '''subfinder域名爆破,ksubdomain验证模式,批量模式下指定爆破域名结果输出文本名称'''
         if args.d:
             domain = args.d
             lib.cmd.wanli.Collect.subdomain_single(domain)
         if args.f:
-            file = args.f
-            lib.cmd.wanli.Collect.subdomain_file(file)
+            if args.o:
+                file = args.f
+                name = args.o
+                lib.cmd.wanli.Collect.subdomain_file(file,name)
 
+    collect_naabu_parser = Cmd2ArgumentParser()
+    collect_naabu_parser.add_argument(
+        "-f", nargs='?', help="naabu端口扫描 naabu -f ip.txt")
+
+    @cmd2.with_argparser(collect_naabu_parser)
+    def do_collect_naabu(self, args):
+        '''naabu端口扫描 naabu -f ip.txt'''
+        if args.f:
+            file = args.f
+            lib.cmd.wanli.Collect.naabu(file)
+
+    collect_httpx_parser = Cmd2ArgumentParser()
+    collect_httpx_parser.add_argument(
+        "-nf", nargs='?', help="httpx 扫描存活资产,不保存文件,httpx -nf url.txt")
+    collect_httpx_parser.add_argument(
+        "-sf", nargs='?', help="httpx 扫描存活资产,保存到json文件,httpx -sf url.txt -o report.json")
+    collect_httpx_parser.add_argument(
+        "-o", nargs='?', help="httpx 对json文件进行url/finalurl梳理,httpx -o report.json")
+
+    @cmd2.with_argparser(collect_httpx_parser)
+    def do_collect_httpx(self, args):
+        '''httpx 扫描存活资产,httpx -f url.txt'''
+        if args.nf:
+            file = args.nf
+            lib.cmd.wanli.Collect.httpx(file)
+        if args.sf:
+            if args.o:
+                file = args.sf
+                name = args.o
+                lib.cmd.wanli.Collect.httpx_savejson(file,name)
+
+    collect_srcScan_parser = Cmd2ArgumentParser()
+    collect_srcScan_parser.add_argument(
+        "-f", nargs='?', help="subfinder&ksubdomain&naabu&httpx&httpxRecover结合梳理域名资产,srcScan -f domain.txt -o report")
+    collect_srcScan_parser.add_argument(
+        "-o", nargs='?', help="subfinder&ksubdomain&naabu&httpx&httpxRecover结合梳理域名资产,srcScan -f domain.txt -o report")
+
+    @cmd2.with_argparser(collect_srcScan_parser)
+    def do_collect_srcScan(self, args):
+        '''subfinder&ksubdomain&naabu&httpx&httpxRecover,srcScan -f domain.txt -o report'''
+        if args.f:
+            if args.o:
+                file = args.f
+                name = args.o
+                lib.cmd.wanli.Collect.srcScan(file,name)
+
+    # ----------------------------------------目录扫描----------------------------------------
 
     dirscan_dirsearch_parser = Cmd2ArgumentParser()
     dirscan_dirsearch_parser.add_argument(
@@ -157,6 +181,72 @@ class newcmd(cmd.Cmd):
             url = args.u
             lib.cmd.wanli.DirScan.ffuf(url)
 
+    dirscan_scout_parser = Cmd2ArgumentParser()
+    dirscan_scout_parser.add_argument(
+        "-u", nargs='?', help="scout url Fuzzing,scout -u http://www.baidu.com/")
+
+    @cmd2.with_argparser(dirscan_scout_parser)
+    def do_dirscan_scout(self, args):
+        '''scout url Fuzzing,scout -u http://www.baidu.com/'''
+        if args.u:
+            url = args.u
+            lib.cmd.wanli.DirScan.scout(url)
+
+    dirscan_urlFinder_parser = Cmd2ArgumentParser()
+    dirscan_urlFinder_parser.add_argument(
+        "-u", nargs='?', help="urlFinder Scan Js File")
+    dirscan_urlFinder_parser.add_argument(
+        "-m", nargs='?', help="1 is normal,2 is thorough")
+
+    @cmd2.with_argparser(dirscan_urlFinder_parser)
+    def do_dirscan_urlFinder(self, args):
+        '''urlFinder Scan Js File'''
+        if args.u:
+            if args.m:
+                url = args.u
+                mode = args.m
+                lib.cmd.wanli.DirScan.urlFinder(url,mode)
+
+    dirscan_katana_parser = Cmd2ArgumentParser()
+    dirscan_katana_parser.add_argument(
+        "-u", nargs='?', help="katana 爬虫扫描")
+    dirscan_katana_parser.add_argument(
+        "-f", nargs='?', help="katana 批量爬虫")
+    dirscan_katana_parser.add_argument(
+        "-o", nargs='?', help="katana 爬虫输出")
+
+    @cmd2.with_argparser(dirscan_katana_parser)
+    def do_dirscan_katana(self, args):
+        '''katana 爬虫扫描网站'''
+        if args.u:
+            if args.o:
+                url = args.u
+                name = args.o
+                lib.cmd.wanli.DirScan.katana_single(url,name)
+        if args.f:
+            if args.o:
+                file = args.f
+                name = args.o
+                lib.cmd.wanli.DirScan.katana_file(file,name)
+
+    dirscan_antcolony_parser = Cmd2ArgumentParser()
+    dirscan_antcolony_parser.add_argument(
+        "-u", nargs='?', help="antcolony 网站Js目录扫描")
+    dirscan_antcolony_parser.add_argument(
+        "-f", nargs='?', help="antcolony 网站Js目录扫描")
+
+    @cmd2.with_argparser(dirscan_antcolony_parser)
+    def do_dirscan_antcolony(self, args):
+        '''antcolony 网站Js目录扫描'''
+        if args.u:
+            url = args.u
+            lib.cmd.wanli.DirScan.antColony_single(url)
+        if args.f:
+            file = args.f
+            lib.cmd.wanli.DirScan.antColony_file(file)
+
+    # ----------------------------------------IP自动化扫描----------------------------------------
+
     ipscan_fscan_parser = Cmd2ArgumentParser()
     ipscan_fscan_parser.add_argument(
         "-i", nargs='?', help="fscan对ip进行扫描, fscan -i 192.168.1.1")
@@ -173,16 +263,9 @@ class newcmd(cmd.Cmd):
             file = args.f
             lib.cmd.wanli.IpScan.fscan_file(file)
 
-    ipscan_goon_parser = Cmd2ArgumentParser()
-    ipscan_goon_parser.add_argument(
-        "-f", nargs='?', help="goon自动对文件ip内容进行全部模块扫描,输出txt文件, goon -f ip.txt")
 
-    @cmd2.with_argparser(ipscan_goon_parser)
-    def do_ipscan_goon(self, args):
-        '''goon all mode对文件ip内容扫描,输出txt'''
-        if args.f:
-            file = args.f
-            lib.cmd.wanli.IpScan.goon(file)
+    # ----------------------------------------PoC扫描----------------------------------------
+
 
     pocscan_xray_parser = Cmd2ArgumentParser()
     pocscan_xray_parser.add_argument(
@@ -194,6 +277,16 @@ class newcmd(cmd.Cmd):
         if args.u:
             url = args.u
             lib.cmd.wanli.PocScan.xray(url)
+
+    pocscan_rad_parser = Cmd2ArgumentParser()
+    pocscan_rad_parser.add_argument("-u", help="rad浏览器爬虫登录爬取")
+
+    @cmd2.with_argparser(pocscan_rad_parser)
+    def do_pocscan_rad(self, args):
+        '''rad浏览器爬虫登录爬取'''
+        if args.u:
+            url = args.u
+            lib.cmd.wanli.PocScan.rad(url)
 
     pocscan_vulmap_parser = Cmd2ArgumentParser()
     pocscan_vulmap_parser.add_argument(
@@ -214,6 +307,8 @@ class newcmd(cmd.Cmd):
     pocscan_xrad_parser = Cmd2ArgumentParser()
     pocscan_xrad_parser.add_argument(
         "-u", nargs='?', help="xray+rad 联动扫描, xrad http://baidu.com")
+    pocscan_xrad_parser.add_argument(
+        "-f", nargs='?', help="xray+rad 联动扫描, xrad -f url.txt")
 
     @cmd2.with_argparser(pocscan_xrad_parser)
     def do_pocscan_xrad(self, args):
@@ -221,6 +316,9 @@ class newcmd(cmd.Cmd):
         if args.u:
             url =args.u
             lib.cmd.wanli.PocScan.xrad(url)
+        if args.f:
+            file = args.f
+            lib.cmd.wanli.PocScan.xrad_file(file)
 
     pocscan_autoxray_parser = Cmd2ArgumentParser()
     pocscan_autoxray_parser.add_argument(
@@ -249,12 +347,10 @@ class newcmd(cmd.Cmd):
             file = args.f
             lib.cmd.wanli.PocScan.afrog_file(file)
 
-    # ----------------------------------------分割----------------------------------------
-    # 定义-h内容
+
     pocscan_nuclei_parser = Cmd2ArgumentParser()
     pocscan_nuclei_parser.add_argument("-u", nargs='?', help="扫描单个目标")
     pocscan_nuclei_parser.add_argument("-f", nargs='?', help="指定文本进行批量漏洞扫描")
-    pocscan_nuclei_parser.add_argument("-p", nargs='?', help="设置socks代理进行批量漏洞扫描")
 
     @cmd2.with_argparser(pocscan_nuclei_parser)
     def do_pocscan_nuclei(self, args):
@@ -265,9 +361,48 @@ class newcmd(cmd.Cmd):
         if args.f:
             file = args.f
             lib.cmd.wanli.PocScan.nuclei_file(file)
-        if args.p:
-            proxy = args.p
-            lib.cmd.wanli.PocScan.nuclei_proxy(proxy)
+
+    pocscan_xssScan_parser = Cmd2ArgumentParser()
+    pocscan_xssScan_parser.add_argument("-u", nargs='?', help="katana + dalfox xssScan 扫描单个目标")
+    pocscan_xssScan_parser.add_argument("-f", nargs='?', help="katana + dalfox xssScan 指定文本进行批量XSS扫描")
+
+    @cmd2.with_argparser(pocscan_xssScan_parser)
+    def do_pocscan_xssScan(self, args):
+        '''katana + dalfox xssScan'''
+        if args.u:
+            url = args.u
+            lib.cmd.wanli.PocScan.xssScan_single(url)
+        if args.f:
+            file = args.f
+            lib.cmd.wanli.PocScan.xssScan_file(file)
+
+    pocscan_sqliScan_parser = Cmd2ArgumentParser()
+    pocscan_sqliScan_parser.add_argument("-u", nargs='?', help="katana + sqlmap sqliScan 扫描单个目标")
+    pocscan_sqliScan_parser.add_argument("-f", nargs='?', help="katana + sqlmap sqliScan 指定文本进行批量XSS扫描")
+
+    @cmd2.with_argparser(pocscan_sqliScan_parser)
+    def do_pocscan_sqliScan(self, args):
+        '''katana + sqlmap sqliScan'''
+        if args.u:
+            url = args.u
+            lib.cmd.wanli.PocScan.sqliScan_single(url)
+        if args.f:
+            file = args.f
+            lib.cmd.wanli.PocScan.sqliScan_file(file)
+
+    pocscan_waterexp_parser = Cmd2ArgumentParser()
+    pocscan_waterexp_parser.add_argument("-u", nargs='?', help="WaterEXP Single Target")
+    pocscan_waterexp_parser.add_argument("-f", nargs='?', help="WaterEXP File Target")
+
+    @cmd2.with_argparser(pocscan_waterexp_parser)
+    def do_pocscan_waterexp(self, args):
+        '''WaterEXP进行poc扫描'''
+        if args.u:
+            url = args.u
+            lib.cmd.wanli.PocScan.waterexp_single(url)
+        if args.f:
+            file = args.f
+            lib.cmd.wanli.PocScan.waterexp_file(file)
 
     pocscan_pocsearch_parser = Cmd2ArgumentParser()
     pocscan_pocsearch_parser.add_argument(
@@ -278,7 +413,9 @@ class newcmd(cmd.Cmd):
         '''查询CVE编号poc/exp在Github中的地址'''
         if args.number:
             search = args.number
-            system(config.config.PYTHON + " " + config.config.pocscan_Pocsearch + " -s {}".format(search))
+            system(configs.config.PYTHON + " " + configs.config.pocscan_Pocsearch + " -s {}".format(search))
+
+    # ----------------------------------------App信息收集----------------------------------------
 
     app_appinfoscanner_parser = Cmd2ArgumentParser()
     app_appinfoscanner_parser.add_argument(
@@ -291,27 +428,33 @@ class newcmd(cmd.Cmd):
             apk = args.i
             lib.cmd.wanli.App.appinfoscanner(apk)
 
-    app_fridaskeleton_parser = Cmd2ArgumentParser()
-    app_fridaskeleton_parser.add_argument(
-        "-p", nargs='?', help="frida-skeleton Bypass SSLPinning")
+    # ----------------------------------------暴力破解----------------------------------------
 
-    @cmd2.with_argparser(app_fridaskeleton_parser)
-    def do_app_fridaskeleton(self, args):
-        '''frida-skeleton Bypass SSLPinning'''
-        if args.p:
-            package = args.p
-            lib.cmd.wanli.App.fridaskeleton(package)
+    brute_blaster_parser = Cmd2ArgumentParser()
+    brute_blaster_parser.add_argument(
+        "-u", nargs='?', help="用户名字典")
+
+    @cmd2.with_argparser(brute_blaster_parser)
+    def do_brute_blaster(self, args):
+        '''blaster 登录页面爆破'''
+        if args.u:
+            username = args.u
+            lib.cmd.wanli.Brute.brute_blaster(username)
+
+    # ----------------------------------------socks代理工具----------------------------------------
 
     rotateproxy_parser = Cmd2ArgumentParser()
     rotateproxy_parser.add_argument(
-        "-r", nargs='?', help="RotateProxy find Socks5,-r 1 cannot bypass gfw,-r 2 bypass gfw")
+        "-r", nargs='?', help="RotateProxy find Socks5 Agent,-r 1 cannot bypass gfw,-r 2 bypass gfw")
 
     @cmd2.with_argparser(rotateproxy_parser)
     def do_rotateproxy(self, args):
-        '''RotateProxy find free Socks5,default port 1080'''
+        '''RotateProxy find free Socks5 Agent'''
         if args.r:
             region = args.r
             lib.cmd.wanli.Proxy.rotateproxy(region)
+
+    # ----------------------------------------中间件专项利用----------------------------------------
 
     cms_check_parser = Cmd2ArgumentParser()
     cms_check_parser.add_argument(
@@ -321,15 +464,28 @@ class newcmd(cmd.Cmd):
     def do_cms_check(self, args):
         '''shiro/struts/thinkphp/weblogic/tongda PoCScan/Exploit'''
         if args.a == 'shiro':
-            lib.cmd.wanli.Exploit.shiro()
+            lib.cmd.wanli.Cms.shiro()
         if args.a == 'struts':
-            lib.cmd.wanli.Exploit.struts2()
+            lib.cmd.wanli.Cms.struts2()
         if args.a == 'thinkphp':
-            lib.cmd.wanli.Exploit.thinkphp()
+            lib.cmd.wanli.Cms.thinkphp()
         if args.a == 'weblogic':
-            lib.cmd.wanli.Exploit.weblogic()
+            lib.cmd.wanli.Cms.weblogic()
         if args.a == 'tongda':
-            lib.cmd.wanli.Exploit.tongda()
+            lib.cmd.wanli.Cms.tongda()
+
+    # ----------------------------------------漏洞利用----------------------------------------
+
+    attack_heapdump_parser = Cmd2ArgumentParser()
+    attack_heapdump_parser.add_argument(
+        "-f", nargs='?', help="Spring heapdump文件泄露利用")
+
+    @cmd2.with_argparser(attack_heapdump_parser)
+    def do_attack_heapdump(self, args):
+        '''Spring heapdump文件泄露利用'''
+        if args.f:
+            file = args.f
+            lib.cmd.wanli.Attack.heapdump(file)
 
 
 

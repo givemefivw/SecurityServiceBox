@@ -1,0 +1,1 @@
+java -jar ThinkphpGUI-1.0T.jar
