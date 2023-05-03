@@ -103,13 +103,13 @@ class DirScan():
     @staticmethod
     def katana_file(file,name):
         cmd = f''
-        cmd = f'start cmd /k {configs.config.dirscan_katana} -list {file} -jc -d 3 -o ./results/katana/{name}.txt'
+        cmd += f'start cmd /k {configs.config.dirscan_katana} -list {file} -jc -d 3 -o ./results/katana/{name}.txt'
         system(cmd)
 
     @staticmethod
     def antColony_single(url):
         cmd = f''
-        cmd = f'start cmd /k {configs.config.PYTHON} {configs.config.dirscan_Antcolony} -u {url} -j -p'
+        cmd += f'start cmd /k {configs.config.PYTHON} {configs.config.dirscan_Antcolony} -u {url} -j -p'
         system(cmd)
 
     @staticmethod
