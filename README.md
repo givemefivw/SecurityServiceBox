@@ -51,7 +51,6 @@ ip扫描：
 PoC扫描：
 
 - afrog:[afrog](https://github.com/zan8in/afrog)
-- autoxray:内置，xray basic爬虫模式自动批量扫描
 - nuclei:[nuclei](https://github.com/projectdiscovery/nuclei)
 - pocsearch:内置，搜索CVE编号漏洞的poc/exp在Github的地址
 - rad:[chaitin/rad (github.com)](https://github.com/chaitin/rad)

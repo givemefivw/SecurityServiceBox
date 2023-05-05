@@ -320,17 +320,6 @@ class newcmd(cmd.Cmd):
             file = args.f
             lib.cmd.wanli.PocScan.xrad_file(file)
 
-    pocscan_autoxray_parser = Cmd2ArgumentParser()
-    pocscan_autoxray_parser.add_argument(
-        "-f", nargs='?', help="AutoXray批量漏扫,输出html报告, autoxray -f url.txt")
-
-    @cmd2.with_argparser(pocscan_autoxray_parser)
-    def do_pocscan_autoxray(self, args):
-        '''AutoXray批量漏扫,输出html'''
-        if args.f:
-            file = args.f
-            lib.cmd.wanli.PocScan.autoxray(file)
-
     pocscan_afrog_parser = Cmd2ArgumentParser()
     pocscan_afrog_parser.add_argument(
         "-u", nargs='?', help="afrog扫描工具进行漏扫,输出html报告, afrog -u http://www.baidu.com")
